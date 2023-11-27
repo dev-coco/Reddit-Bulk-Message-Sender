@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auto Send Message</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 500px;
+      height: 225px;
+    }
+    input,
+    textarea,
+    select,
+    button,
+    span {
+      font-family: 'HelveticaNeue', 'Arial', sans-serif;
+      font-size: 18px;
+    }
+    #form {
+      width: 500px;
+      margin: 10px auto;
+      background: #ffffff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    div.form-item {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    input.form-style,
+    select.form-style,
+    textarea.form-style {
+      color: #8a8a8a;
+      width: 460px;
+      height: 24px;
+      padding: 5px 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #fff;
+      letter-spacing: .8px;
+    }
+    textarea {
+      resize: none;
+      height: 350px !important;
+    }
+    select {
+      height: 35px !important;
+      width: 500px !important;
+    }
+    div.form-item .form-style:focus {
+      outline: none;
+      border: 1px solid #58bff6;
+      color: #58bff6;
+    }
+  </style>
+</head>
+<body>
+  <div id="form">
+    <div class="form-item">
+      <input class="form-style" id="delayTime" value="60" placeholder="延迟时间">
+    </div>
+    <div class="form-item">
+      <textarea class="form-style" id="content" placeholder="输入需要发送的内容，一行一个，换行使用\n代替"></textarea>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

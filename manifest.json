@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Reddit 批量发送消息",
+  "description": "自动化批量给指定用户发送消息。",
+  "author": "Raz1ner",
+  "version": "1.0.1",
+  "action": {
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "128": "icon.png"
+  },
+  "background" : {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.reddit.com/*"],
+      "js": ["extID.js"]
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["https://chat.reddit.com/*"]
+  },
+  "web_accessible_resources": [{
+    "resources": ["*.js"],
+    "matches": ["https://chat.reddit.com/*"]
+  }],
+  "host_permissions": [
+    "https://*.reddit.com/*",
+    "https://matrix.redditspace.com/*"
+  ],
+  "permissions": ["storage"]
+}
