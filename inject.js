@@ -30,11 +30,32 @@ const banner = str => {
   topBanner.innerHTML = str
 }
 
+const messageList = {}
+
 // 设置监听器
 async function init () {
   try {
+    // 左上角 logo
     const chatLogo = document.querySelector('body > faceplate-app > rs-app').shadowRoot.querySelector('div.container > rs-rooms-nav').shadowRoot.querySelector('div.flex.items-center.px-md.py-sm > span')
+    // 监听 logo，点击加载菜单
     chatLogo.addEventListener('click', createMenu)
+
+    // 将列表写入 messageList
+    let observer = new MutationObserver(() => {
+      const chatList = document.querySelector('body > faceplate-app > rs-app').shadowRoot.querySelector('div.container > rs-rooms-nav').shadowRoot.querySelector('rs-virtual-scroll').shadowRoot.querySelectorAll('[room*="reddit.com"]')
+      for (const info of chatList) {
+        try {
+          const userName = info.shadowRoot.querySelector('.room-name').outerText
+          const content = info.shadowRoot.querySelector('.last-message').outerText
+          messageList[userName] = content
+        } catch {}
+      }
+    })
+    // 聊天用户列表
+    const chatList = document.querySelector('body > faceplate-app > rs-app').shadowRoot.querySelector('div.container > rs-rooms-nav').shadowRoot.querySelector('rs-virtual-scroll').shadowRoot
+    // 监听列表变动
+    observer.observe(chatList, { childList: true, subtree: true })
+    
     console.log('加载成功')
   } catch (erro) {
     // 可能会因为网络问题加载失败，每隔 1 秒循环一次直到加载成功
@@ -52,7 +73,7 @@ function createMenu () {
   html = document.querySelector('body > faceplate-app > rs-app').shadowRoot.querySelector('div.container > rs-room-overlay-manager > rs-room').shadowRoot.querySelector('main > rs-timeline').shadowRoot.querySelector('rs-virtual-scroll-dynamic').shadowRoot
   // 加载页面
   html.innerHTML = `
-    <style>*{margin:0;padding:0;box-sizing:border-box}textarea{outline:0;border:none}button{outline:0!important;border:none;background:0 0}button:hover{cursor:pointer}.contact{z-index:999999;width:100%;min-height:100%;padding:15px;background:#009bff;background:-webkit-linear-gradient(left,#0072ff,#00c6ff);background:-o-linear-gradient(left,#0072ff,#00c6ff);background:-moz-linear-gradient(left,#0072ff,#00c6ff);background:linear-gradient(left,#0072ff,#00c6ff)}.contact-center{position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%)}.container-contact{width:1163px;background:#fff;border-radius:10px;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:50px 130px 50px 148px}.contact-div{width:390px}.contact-div-title{display:block;font-size:24px;color:#333;line-height:1.2px;text-align:center;padding-bottom:44px}.contact-div .wrap .textarea{min-height:350px;border-radius:25px;padding:12px 30px}.contact-div .wrap{position:relative;width:100%;z-index:1;margin-bottom:20px}.textarea{display:block;width:100%;background:#e6e6e6;font-family:Montserrat-Bold;font-size:15px;line-height:1.5;color:#666}.div-btn{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;flex-wrap:wrap;justify-content:center}.contact-btn{min-width:193px;height:50px;border-radius:25px;background:#57b846;font-family:Montserrat-Bold;font-size:15px;line-height:1.5;color:#fff;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;justify-content:center;align-items:center;padding:0 25px;-webkit-transition:.4s;-o-transition:.4s;-moz-transition:.4s;transition:.4s}#banner{margin:0 auto;background:#fff;width:fit-content;padding:4px 13px 4px 13px;border-radius:10px;margin-bottom:15px}</style>
+    <style>*{margin:0;padding:0;box-sizing:border-box}textarea{outline:0;border:none}button{outline:0!important;border:none;background:0 0}button:hover{cursor:pointer}.contact{z-index:999999;width:100%;min-height:100%;padding:15px;background:#009bff;background:-webkit-linear-gradient(left,#0072ff,#00c6ff);background:-o-linear-gradient(left,#0072ff,#00c6ff);background:-moz-linear-gradient(left,#0072ff,#00c6ff);background:linear-gradient(left,#0072ff,#00c6ff)}.contact-center{position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%)}.container-contact{width:1164px;background:#fff;border-radius:10px;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:50px 130px 50px 148px}.contact-div{width:390px}.contact-div-title{display:block;font-size:24px;color:#333;line-height:1.2px;text-align:center;padding-bottom:44px}.contact-div .wrap .textarea{min-height:350px;border-radius:25px;padding:12px 30px}.contact-div .wrap{position:relative;width:100%;z-index:1}.textarea{display:block;width:100%;background:#e6e6e6;font-family:Montserrat-Bold;font-size:15px;line-height:1.5;color:#666}.div-btn{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;flex-wrap:wrap;justify-content:center;margin-top:20px;}.contact-btn{min-width:193px;height:50px;border-radius:25px;background:#57b846;font-family:Montserrat-Bold;font-size:15px;line-height:1.5;color:#fff;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;justify-content:center;align-items:center;padding:0 25px;-webkit-transition:.4s;-o-transition:.4s;-moz-transition:.4s;transition:.4s}#banner{margin:0 auto;background:#fff;width:fit-content;padding:4px 13px 4px 13px;border-radius:10px;margin-bottom:16px}</style>
     <div class="contact">
       <div class="contact-center">
         <p id="banner" class="shadow" style="opacity: 0;"></p>
@@ -66,6 +87,11 @@ function createMenu () {
                 <span>检测活跃时间</span>
               </button>
             </div>
+            <div class="div-btn">
+              <button class="contact-btn" id="detectReply">
+                <span>检测是否回复</span>
+              </button>
+            </div>
           </div>
           <div class="contact-div">
             <div class="wrap">
@@ -74,6 +100,11 @@ function createMenu () {
             <div class="div-btn">
               <button class="contact-btn" id="bulkMessage">
                 <span>群发消息</span>
+              </button>
+            </div>
+            <div class="div-btn">
+              <button class="contact-btn" id="none" style="background:white;color:white;">
+                <span>无</span>
               </button>
             </div>
           </div>
@@ -89,6 +120,8 @@ function createMenu () {
   bulkMessageBtn.addEventListener('click', bulkMessage)
   const detectActiveBtn = html.getElementById('detectActive')
   detectActiveBtn.addEventListener('click', detectActive)
+  const detectReplyBtn = html.getElementById('detectReply')
+  detectReplyBtn.addEventListener('click', detectReply)
 }
 
 // 批量发送消息
@@ -137,11 +170,35 @@ async function detectActive () {
     banner(`进行中：${index} / ${userList.length}`)
     const text = await sendBackground(['request', [userLink]])
     div.innerHTML = text
+    const karma = document.querySelector('[id="profile--id-card--highlight-tooltip--karma"]').outerText
     const activeTime = [...div.querySelectorAll('._3CecFEZvC8MFSvLsfuVYUs [data-testid="comment_timestamp"]')].map(x => x.outerText)
     const result = activeTime.slice(0, 10).join('\t')
-    output.value += result + '\n'
-    outputCache += result + '\n'
+    output.value += `${karma}\t${result}\n`
+    outputCache += `${karma}\t${result}\n`
     await delay(3)
   }
   banner('完成')
+}
+
+// 检测是否回复
+async function detectReply () {
+  const input = html.getElementById('contactInput').value.match(/.+/g)
+  const output = html.getElementById('contactOutput')
+  const init = await sendBackground(['init'])
+  const contentList = init.getContent.split('\n')
+  let result = ''
+  output.value = ''
+  for (const userLink of input) {
+    const userName = userLink.replace(/.+\/user\/|\//g, '')
+    const contentWithName = contentList.map(r => 'You: ' + r.replace(/@@@/g, userName))
+    const currentContent = messageList[userName]
+    if (!currentContent) {
+      result += '未检测到消息\n'
+    } else if (contentWithName.includes(currentContent)) {
+      result += '未回复\n'
+    } else {
+      result += '已回复\n'
+    }
+  }
+  output.value = result
 }

@@ -34,7 +34,8 @@ async function sendMessage (url, content, authorization) {
     const userData = JSON.parse(text.match(/(?<=window.___r = ){.*}/g)[0])
     // const userName = text.match(/(?<=<h1 class="_3LM4tRaExed4x1wBfK1pmg">).*?(?=<\/h1>)/g)[0].trim()
     const init = Object.values(userData.users.models)[0]
-    const userName = Object.values(userData.profiles.models)[0].title || init.displayText
+    const userName = init.displayText
+    // Object.values(userData.profiles.models)[0].title
     const userID = init.id
     // const userID = text.match(/(?<="id":").*?(?=","isEmployee")/g)[0].replace(/.+id":"/g, '')
     const json = await fetch('https://matrix.redditspace.com/_matrix/client/r0/createRoom', {
