@@ -9,7 +9,8 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
   const init = {
     'init': () => getInit().then(data => sendResponse(data)),
     'sendMessage': () => sendMessage(...message[1]).then(data => sendResponse(data)),
-    'request': () => request(message[1]).then(data => sendResponse(data))
+    'request': () => request(message[1]).then(data => sendResponse(data)),
+    'postData': () => postData(...message[1]).then(data => sendResponse(data)),
   }
   init[action]()
   return true
@@ -32,12 +33,9 @@ async function sendMessage (url, content, authorization) {
   try {
     const text = await fetch(url).then(response => response.text())
     const userData = JSON.parse(text.match(/(?<=window.___r = ){.*}/g)[0])
-    // const userName = text.match(/(?<=<h1 class="_3LM4tRaExed4x1wBfK1pmg">).*?(?=<\/h1>)/g)[0].trim()
     const init = Object.values(userData.users.models)[0]
     const userName = init.displayText
-    // Object.values(userData.profiles.models)[0].title
     const userID = init.id
-    // const userID = text.match(/(?<="id":").*?(?=","isEmployee")/g)[0].replace(/.+id":"/g, '')
     const json = await fetch('https://matrix.redditspace.com/_matrix/client/r0/createRoom', {
       headers: {
         accept: 'application/json',
@@ -50,8 +48,9 @@ async function sendMessage (url, content, authorization) {
     }).then(response => response.json())
     const obj = {
       msgtype: 'm.text',
-      body: content.replace(/@@@/g, userName.trim())
+      body: content.replace(/@@@/g, userName.trim()).replace(/\\n/g, '\n')
     }
+    if (!json.room_id) return 'failed'
     const sendText = await fetch(`https://matrix.redditspace.com/_matrix/client/r0/rooms/${json.room_id}/send/m.room.message/m${new Date().getTime()}.0`, {
       headers: {
         accept: 'application/json',
@@ -62,8 +61,8 @@ async function sendMessage (url, content, authorization) {
       method: 'PUT',
       credentials: 'include'
     }).then(response => response.json())
-    console.log(sendText)
-    return 'success'
+    console.log(sendText.event_id)
+    return sendText.event_id ? 'success' : 'failed'
   } catch {
     return 'failed'
   }

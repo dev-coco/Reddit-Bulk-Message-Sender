@@ -3,7 +3,7 @@
   "name": "Reddit 批量发送消息",
   "description": "自动化批量给指定用户发送消息。",
   "author": "Raz1ner",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "action": {
     "default_icon": "icon.png"
   },

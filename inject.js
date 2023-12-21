@@ -57,7 +57,7 @@ async function init () {
     observer.observe(chatList, { childList: true, subtree: true })
     
     console.log('加载成功')
-  } catch (erro) {
+  } catch (error) {
     // 可能会因为网络问题加载失败，每隔 1 秒循环一次直到加载成功
     console.log('加载失败', error)
     await delay(1)
@@ -103,8 +103,8 @@ function createMenu () {
               </button>
             </div>
             <div class="div-btn">
-              <button class="contact-btn" id="none" style="background:white;color:white;">
-                <span>无</span>
+              <button class="contact-btn" id="getPostData">
+                <span>获取帖文数据</span>
               </button>
             </div>
           </div>
@@ -122,6 +122,8 @@ function createMenu () {
   detectActiveBtn.addEventListener('click', detectActive)
   const detectReplyBtn = html.getElementById('detectReply')
   detectReplyBtn.addEventListener('click', detectReply)
+  const getPostDataBtn = html.getElementById('getPostData')
+  getPostDataBtn.addEventListener('click', getPostData)
 }
 
 // 批量发送消息
@@ -136,7 +138,7 @@ async function bulkMessage () {
   const delayTime = init.getDelayTime || 60
   if (!init.getContent) return alert('请设置发送内容')
   const contentList = init.getContent.split('\n')
-  authorization = 'Bearer '+ document.querySelector('body > faceplate-app > rs-app').token.token
+  const authorization = 'Bearer ' + document.querySelector('body > faceplate-app > rs-app').token.token
   let index = 0
   for (const userLink of userList) {
     index++
@@ -170,7 +172,7 @@ async function detectActive () {
     banner(`进行中：${index} / ${userList.length}`)
     const text = await sendBackground(['request', [userLink]])
     div.innerHTML = text
-    const karma = document.querySelector('[id="profile--id-card--highlight-tooltip--karma"]').outerText
+    const karma = div.querySelector('[id="profile--id-card--highlight-tooltip--karma"]').outerText
     const activeTime = [...div.querySelectorAll('._3CecFEZvC8MFSvLsfuVYUs [data-testid="comment_timestamp"]')].map(x => x.outerText)
     const result = activeTime.slice(0, 10).join('\t')
     output.value += `${karma}\t${result}\n`
@@ -190,15 +192,39 @@ async function detectReply () {
   output.value = ''
   for (const userLink of input) {
     const userName = userLink.replace(/.+\/user\/|\//g, '')
-    const contentWithName = contentList.map(r => 'You: ' + r.replace(/@@@/g, userName))
+    const contentWithName = contentList.map(r => 'You: ' + r.replace(/@@@/g, userName).match(/^.{5}/g)[0])
     const currentContent = messageList[userName]
     if (!currentContent) {
       result += '未检测到消息\n'
-    } else if (contentWithName.includes(currentContent)) {
+    } else if (contentWithName.includes(currentContent.match(/^.{10}/g)[0])) {
       result += '未回复\n'
     } else {
       result += '已回复\n'
     }
   }
   output.value = result
+}
+
+// 获取帖子数据
+async function getPostData () {
+  const input = html.getElementById('contactInput').value
+  const output = html.getElementById('contactOutput')
+  inputCache = input
+  outputCache = ''
+  output.value = ''
+  const postLink = input.match(/.+/g)
+  let index = 0
+  const div = document.createElement('div')
+  for (const link of postLink) {
+    index++
+    banner(`进行中：${index} / ${postLink.length}`)
+    const text = await sendBackground(['request', [link]])
+    div.innerHTML = text
+    const upvote = div.getElementsByClassName('_1rZYMD_4xY3gRcSS3p8ODO _3a2ZHWaih05DgAOtvu6cIo _2iiIcja5xIjg-5sI4ECvcV')[0].outerText
+    const comments = div.getElementsByClassName('_1UoeAeSRhOKSNdY_h3iS1O _3m17ICJgx45k_z-t82iVuO _3U_7i38RDPV5eBv7m4M-9J _2qww3J5KKzsD7e5DO0BvvU')[0].outerText.replace(/ comment.*/gi, '')
+    output.value += `${upvote}\t${comments}\n`
+    outputCache += `${upvote}\t${comments}\n`
+    await delay(3)
+  }
+  banner('完成')
 }
