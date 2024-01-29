@@ -57,6 +57,7 @@ async function init () {
     observer.observe(chatList, { childList: true, subtree: true })
     
     console.log('加载成功')
+
   } catch (error) {
     // 可能会因为网络问题加载失败，每隔 1 秒循环一次直到加载成功
     console.log('加载失败', error)
@@ -83,13 +84,8 @@ function createMenu () {
               <textarea class="textarea" id="contactInput" placeholder="请输入用户链接"></textarea>
             </div>
             <div class="div-btn">
-              <button class="contact-btn" id="detectActive">
-                <span>检测活跃时间</span>
-              </button>
-            </div>
-            <div class="div-btn">
-              <button class="contact-btn" id="detectReply">
-                <span>检测是否回复</span>
+              <button class="contact-btn" id="getPostData">
+                <span>获取帖文数据</span>
               </button>
             </div>
           </div>
@@ -100,11 +96,6 @@ function createMenu () {
             <div class="div-btn">
               <button class="contact-btn" id="bulkMessage">
                 <span>群发消息</span>
-              </button>
-            </div>
-            <div class="div-btn">
-              <button class="contact-btn" id="getPostData">
-                <span>获取帖文数据</span>
               </button>
             </div>
           </div>
@@ -118,16 +109,13 @@ function createMenu () {
   // 设置监听器
   const bulkMessageBtn = html.getElementById('bulkMessage')
   bulkMessageBtn.addEventListener('click', bulkMessage)
-  const detectActiveBtn = html.getElementById('detectActive')
-  detectActiveBtn.addEventListener('click', detectActive)
-  const detectReplyBtn = html.getElementById('detectReply')
-  detectReplyBtn.addEventListener('click', detectReply)
   const getPostDataBtn = html.getElementById('getPostData')
   getPostDataBtn.addEventListener('click', getPostData)
 }
 
 // 批量发送消息
 async function bulkMessage () {
+  console.log('1')
   const input = html.getElementById('contactInput').value
   const output = html.getElementById('contactOutput')
   inputCache = input
@@ -155,54 +143,6 @@ async function bulkMessage () {
     await delay(delayTime)
   }
   banner('完成')
-}
-
-// 检测活跃时间
-async function detectActive () {
-  const input = html.getElementById('contactInput').value
-  const output = html.getElementById('contactOutput')
-  inputCache = input
-  outputCache = ''
-  output.value = ''
-  const userList = input.match(/.+/g)
-  let index = 0
-  const div = document.createElement('div')
-  for (const userLink of userList) {
-    index++
-    banner(`进行中：${index} / ${userList.length}`)
-    const text = await sendBackground(['request', [userLink]])
-    div.innerHTML = text
-    const karma = div.querySelector('[id="profile--id-card--highlight-tooltip--karma"]').outerText
-    const activeTime = [...div.querySelectorAll('._3CecFEZvC8MFSvLsfuVYUs [data-testid="comment_timestamp"]')].map(x => x.outerText)
-    const result = activeTime.slice(0, 10).join('\t')
-    output.value += `${karma}\t${result}\n`
-    outputCache += `${karma}\t${result}\n`
-    await delay(3)
-  }
-  banner('完成')
-}
-
-// 检测是否回复
-async function detectReply () {
-  const input = html.getElementById('contactInput').value.match(/.+/g)
-  const output = html.getElementById('contactOutput')
-  const init = await sendBackground(['init'])
-  const contentList = init.getContent.split('\n')
-  let result = ''
-  output.value = ''
-  for (const userLink of input) {
-    const userName = userLink.replace(/.+\/user\/|\//g, '')
-    const contentWithName = contentList.map(r => 'You: ' + r.replace(/@@@/g, userName).match(/^.{5}/g)[0])
-    const currentContent = messageList[userName]
-    if (!currentContent) {
-      result += '未检测到消息\n'
-    } else if (contentWithName.includes(currentContent.match(/^.{10}/g)[0])) {
-      result += '未回复\n'
-    } else {
-      result += '已回复\n'
-    }
-  }
-  output.value = result
 }
 
 // 获取帖子数据

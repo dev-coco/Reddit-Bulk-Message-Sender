@@ -3,39 +3,32 @@
   "name": "Reddit 批量发送消息",
   "description": "自动化批量给指定用户发送消息。",
   "author": "Raz1ner",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon/icon.png",
+    "default_popup": "page/popup.html"
   },
   "icons": {
-    "128": "icon.png"
+    "128": "icon/icon.png"
   },
   "background" : {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://chat.reddit.com/*"],
-      "js": ["extID.js"]
-    }, {
-      "matches": ["https://www.reddit.com/r/*/comments/*"],
-      "js": ["exportComment.js"]
-    }
-  ],
+  "content_scripts": [{
+    "matches": ["https://*.reddit.com/*"],
+    "js": ["js/content.js"]
+  }],
   "externally_connectable": {
-    "matches": ["https://chat.reddit.com/*"]
+    "matches": ["https://*.reddit.com/*"]
   },
   "web_accessible_resources": [{
-    "resources": ["*.js"],
-    "matches": ["https://chat.reddit.com/*"]
+    "resources": ["js/*.js"],
+    "matches": ["https://*.reddit.com/*"]
   }],
   "host_permissions": [
     "https://*.reddit.com/*",
-    "https://matrix.redditspace.com/*"
+    "https://matrix.redditspace.com/*",
+    "https://script.google.com/macros/*"
   ],
   "permissions": ["storage"]
 }

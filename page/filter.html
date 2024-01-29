@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter</title>
+  <style>
+    table {
+      border-spacing: 1;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+      margin: 0 auto;
+      line-height: 25px;
+    }
+    table td,
+    table th {
+      padding-left: 8px;
+    }
+    table thead tr {
+      height: 60px;
+      background: #0179d3;
+      color: white;
+      font-size: 16px;
+    }
+    table tbody tr {
+      height: 48px;
+      border-bottom: 1px solid #E3F1D5;
+    }
+    table tbody tr:last-child {
+      border: 0;
+    }
+    table td,
+    table th {
+      text-align: left;
+    }
+
+    body {
+      background: #dae0e6;
+      font-size: 16px;
+      /* font: 400 14px "Calibri", "Arial"; */
+
+      /* padding: 20px; */
+    }
+
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+
+    table tr td:nth-child(2) {
+      text-align: center;
+      min-width: 100px;
+    }
+
+    table tr td:nth-child(3) {
+      text-align: center;
+      min-width: 70px;
+    }
+
+    table tr td:nth-child(4) {
+      text-align: center;
+      min-width: 60px;
+    }
+
+    table tr td:nth-child(5) {
+      text-align: center;
+      min-width: 65px;
+    }
+
+    table tr td:nth-child(6) {
+      min-width: 80px;
+    }
+
+    table tr td:nth-child(6) .box::-webkit-scrollbar {
+      display: none;
+    }
+
+    table tr td:nth-child(7) {
+      width: 100% !important;
+      /* word-wrap:break-word; */
+      word-break: break-all;
+      padding: 5px 10px;
+      overflow: auto;
+      /* height: 120px; */
+    }
+
+    .box {
+      max-height: 120px;
+      overflow: auto;
+    }
+
+    input[type=checkbox] {
+      width: 25px;
+      height: 25px;
+    }
+
+
+    .btn {
+      display: inline-block;
+      margin: 6px;
+      font-size: inherit;
+      line-height: 1.42;
+      padding: 0.8em 1.6em;
+      font-weight: normal;
+      border-width: 0;
+      border-style: solid;
+      background: transparent;
+      border-radius: 0.2666666667em;
+      cursor: pointer;
+      font-family: "Booster Next FY", "Avenir Next", Avenir, sans-serif;
+      user-select: none;
+      vertical-align: bottom;
+      transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+      vertical-align: middle;
+    }
+
+    .btn:hover {
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+    }
+
+
+
+    .btn-dark {
+      box-shadow: 0 3px 0 0 #1e1f26, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #3F4351;
+      background-image: linear-gradient(-45deg, #3F4351, #384758);
+      color: #E6EAEF;
+    }
+
+    .btn-dark:hover {
+      box-shadow: 0 3px 0 0 #1e1f26, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-dark:active {
+      box-shadow: 0 0px 0 0 #121418, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #1e1f26;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-pink {
+      box-shadow: 0 3px 0 0 #b3004a, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #FF006A;
+      background-image: linear-gradient(-45deg, #FF006A, #ff00aa);
+      color: #E6EAEF;
+    }
+
+    .btn-pink:hover {
+      box-shadow: 0 3px 0 0 #b3004a, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-pink:active {
+      box-shadow: 0 0px 0 0 #990040, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #b3004a;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-blue {
+      box-shadow: 0 3px 0 0 #082fa6, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #0B44EF;
+      background-image: linear-gradient(-45deg, #0B44EF, #007dfa);
+      color: #E6EAEF;
+    }
+
+    .btn-blue:hover {
+      box-shadow: 0 3px 0 0 #082fa6, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-blue:active {
+      box-shadow: 0 0px 0 0 #07288d, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #082fa6;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-purple {
+      box-shadow: 0 3px 0 0 #6b139e, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #991BE2;
+      background-image: linear-gradient(-45deg, #991BE2, #640eef);
+      color: #E6EAEF;
+    }
+
+    .btn-purple:hover {
+      box-shadow: 0 3px 0 0 #6b139e, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-purple:active {
+      box-shadow: 0 0px 0 0 #5b1087, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #6b139e;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+
+    .btn-orange {
+      box-shadow: 0 3px 0 0 #c65938, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #EE693F;
+      background-image: linear-gradient(-45deg, #EE693F, #F69454);
+      color: #E6EAEF;
+    }
+
+    .btn-orange:hover {
+      box-shadow: 0 3px 0 0 #EE693F, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-orange:active {
+      box-shadow: 0 0px 0 0 #EE693F, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #c65938;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-brown {
+      box-shadow: 0 3px 0 0 #2f1f1e, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      background-color: #FDD475;
+      background-image: linear-gradient(-45deg, #523634, #B6452C);
+      color: #E6EAEF;
+    }
+
+    .btn-brown:hover {
+      box-shadow: 0 3px 0 0 #2f1f1e, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+    }
+
+    .btn-brown:active {
+      box-shadow: 0 0px 0 0 #2f1f1e, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+      transition: 0s;
+      color: #E6EAEF;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    #filterRegex {
+      height: 30px;
+      vertical-align: middle;
+      width: 220px;
+    }
+
+    .center {
+      display: block;
+      margin: 30px auto;
+    }
+
+    .tool-bar {
+      margin: 10px 0px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tool-bar">
+    <button class="btn btn-pink" id="cleanCommentList">清空列表</button>
+    <button class="btn btn-blue" id="queryActiveTime">获取活跃时间</button>
+    <button class="btn btn-orange" id="duplicates">排除重复</button>
+    <button class="btn btn-brown" id="hideUnCheck">隐藏未勾选</button>
+    <button class="btn btn-dark" id="copyInfo">复制信息</button>
+    <br>
+    <button class="btn btn-purple" id="filterBadge">徽章筛选</button>
+    <input type="text" id="filterRegex">
+    <span id="status"></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th><input class="form-check-input filter-input-all" type="checkbox"></th>
+        <th>名字</th>
+        <th>评论时间</th>
+        <th>徽章</th>
+        <th>推荐时间</th>
+        <th>活跃时间</th>
+        <th>评论内容</th>
+      </tr>
+    </thead>
+    <tbody id="filterTable">
+    </tbody>
+  </table>
+  <div id="importBox">
+    <textarea id="importLink" cols="80" rows="20" class="center"></textarea>
+    <button class="btn btn-blue center" id="importData">导入</button>
+  </div>
+  <script src="filter.js"></script>
+</body>
+</html>

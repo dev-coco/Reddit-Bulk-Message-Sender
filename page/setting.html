@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Auto Send Message</title>
+  <title>Setting</title>
   <meta charset="utf-8">
   <style>
     body {
@@ -12,6 +12,7 @@
     textarea,
     select,
     button,
+    label,
     span {
       font-family: 'HelveticaNeue', 'Arial', sans-serif;
       font-size: 18px;
@@ -27,7 +28,6 @@
     }
     div.form-item {
       margin-bottom: 20px;
-      text-align: center;
     }
     input.form-style,
     select.form-style,
@@ -54,17 +54,62 @@
       border: 1px solid #58bff6;
       color: #58bff6;
     }
+    label {
+      display: block;
+      margin: 0 0 10px 8px;
+    }
+    .v-mid {
+      vertical-align: middle
+    }
+    .btn {
+      display: inline-block;
+      backface-visibility: hidden;
+      background-color: #405cf5;
+      border-radius: 6px;
+      border-width: 0;
+      box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 14px 25px;
+      line-height: 1.15;
+      margin: 0px 25px;
+      outline: none;
+      overflow: hidden;
+      position: relative;
+    }
+    .btn:focus {
+      box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+    }
+    label[for=importInit] {
+      display: inline;
+      background-color: #fa6400
+    }
+    #importInit {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="form">
     <div class="form-item">
+      <label>脚本链接</label>
+      <input class="form-style" id="scriptUrl" placeholder="脚本链接">
+    </div>
+    <div class="form-item">
+      <label>表格链接</label>
+      <input class="form-style" id="sheetUrl" placeholder="表格链接">
+    </div>
+    <div class="form-item">
+      <label>延迟时间</label>
       <input class="form-style" id="delayTime" value="60" placeholder="延迟时间">
     </div>
     <div class="form-item">
+      <label>群发消息</label>
       <textarea class="form-style" id="content" placeholder="输入需要发送的内容，一行一个，换行使用\n代替"></textarea>
     </div>
   </div>
-  <script src="options.js"></script>
+  <script src="setting.js"></script>
 </body>
 </html>
